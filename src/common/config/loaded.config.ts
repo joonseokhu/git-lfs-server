@@ -10,27 +10,19 @@ export class LoadedConfig extends BaseLoadedConfig {
 
   @Expose()
   @IsNotEmpty()
-  LOG_PATH: string = '/var/log/automation';
+  LOG_PATH: string = '/var/log/git-lfs';
 
   @Expose()
   @IsUrl()
   @IsNotEmpty()
-  DATABASE_HOST: string = 'localhost';
+  STORE_DIRECTORY: string = '/srv/git-lfs';
 
   @Expose()
   @IsInt()
   @IsNotEmpty()
-  DATABASE_PORT: number = 5432;
+  HTTP_PORT: number = 8080;
 
   @Expose()
   @IsNotEmpty()
-  DATABASE_USERNAME: string = 'postgres';
-
-  @Expose()
-  @IsNotEmpty()
-  DATABASE_PASSWORD: string = 'postgres';
-
-  @Expose()
-  @IsNotEmpty()
-  DATABASE_NAME: string = 'postgres';
+  SSH_PORT: number = 2222;
 }

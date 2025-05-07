@@ -1,12 +1,12 @@
+import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER, WinstonModule } from 'nest-winston';
 import winston, { Logger } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import { Inject } from '@nestjs/common';
-import { CommonConfig } from './config';
+import { AppConfig } from './config';
 
 export const LoggerModule = WinstonModule.forRootAsync({
-  inject: [CommonConfig],
-  useFactory(config: CommonConfig) {
+  inject: [AppConfig],
+  useFactory(config: AppConfig) {
     return {
       transports: [
         new winston.transports.Console({
