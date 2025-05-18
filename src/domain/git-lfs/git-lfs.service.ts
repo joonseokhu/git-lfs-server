@@ -20,6 +20,10 @@ export class GitLFSService {
     return this.fileStore.get(user, repo, objectId);
   }
 
+  async exists(user: string, repo: string, objectId: string) {
+    return this.fileStore.exists(user, repo, objectId);
+  }
+
   async getSize(user: string, repo: string, objectId: string) {
     return this.fileStore.getSize(user, repo, objectId);
   }

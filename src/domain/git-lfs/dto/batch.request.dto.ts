@@ -5,6 +5,9 @@ export enum BatchOperation {
   Upload = 'upload',
   Verify = 'verify',
 }
+export enum BatchTransfer {
+  Basic = 'basic',
+}
 
 export class BatchRequestObject {
   @DtoProp()
@@ -17,6 +20,9 @@ export class BatchRequestObject {
 export class BatchRequest {
   @DtoProp('', () => BatchOperation)
   operation: BatchOperation;
+
+  @DtoProp('', () => BatchTransfer)
+  transfers: BatchTransfer[] = [BatchTransfer.Basic];
 
   @DtoProp('', () => BatchRequestObject)
   objects: BatchRequestObject[];

@@ -2,27 +2,26 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Param,
   Post,
   Put,
   Req,
   StreamableFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { BatchRequest, VerifyRequest } from './dto';
 import { GitLFSBatchService } from './git-lfs-batch.service';
-import { GitLFSInterceptor } from './git-lfs.interceptor';
 import { GitLFSService } from './git-lfs.service';
 
 @Controller(':user/:repo')
-@UseInterceptors(GitLFSInterceptor)
 export class GitLFSController {
   constructor(
     private readonly lfsService: GitLFSService,
     private readonly batchService: GitLFSBatchService,
   ) {}
 
+  @Header('Content-Type', 'application/vnd.git-lfs+json')
   @Post('objects/batch')
   async batchObject(
     @Param('user') user: string,

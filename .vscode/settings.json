@@ -2,7 +2,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     // "source.organizeImports": "explicit",
-    "source.sortImports": "explicit",
+    // "source.sortImports": "explicit",
     "source.removeUnusedImports": "explicit",
-  }
+  },
+  "editor.wordWrap": "bounded"
 }

@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { BaseLoadedConfig } from '@utils/config';
 import { Expose, Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
@@ -22,6 +23,30 @@ export class LoadedConfig extends BaseLoadedConfig {
   @IsString()
   @IsNotEmpty()
   STORE_DIRECTORY: string = '/srv/git-lfs';
+
+  @Expose()
+  @IsString()
+  @Optional()
+  STORE_SSH_HOST?: string;
+
+  @Expose()
+  @IsInt()
+  STORE_SSH_PORT: number = 22;
+
+  @Expose()
+  @IsString()
+  @Optional()
+  STORE_SSH_USER?: string;
+
+  @Expose()
+  @IsString()
+  @Optional()
+  STORE_SSH_PRIVATE_KEY?: string;
+
+  @Expose()
+  @IsString()
+  @Optional()
+  STORE_SSH_PASSWORD?: string;
 
   @Expose()
   @IsInt()

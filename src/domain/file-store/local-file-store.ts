@@ -1,11 +1,11 @@
-import { LocalStoreConfig, NotFoundError } from '@common';
+import { StoreConfig, NotFoundError } from '@common';
 import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import { FileStore } from './file-store.abstract';
 
 export class LocalFileStore implements FileStore {
-  constructor(private readonly storeConfig: LocalStoreConfig) {}
+  constructor(private readonly storeConfig: StoreConfig) {}
 
   private getPath(user: string, repo: string, oid: string): string {
     return path.join(this.storeConfig.storeDirectory, user, repo, oid);
@@ -18,8 +18,8 @@ export class LocalFileStore implements FileStore {
     stream: Readable,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
-      const key = this.getPath(user, repo, oid);
-      const writeStream = fs.createWriteStream(key, 'utf8');
+      const filePath = this.getPath(user, repo, oid);
+      const writeStream = fs.createWriteStream(filePath, 'utf8');
 
       return stream
         .pipe(writeStream)
@@ -29,11 +29,11 @@ export class LocalFileStore implements FileStore {
   }
 
   async get(user: string, repo: string, oid: string): Promise<fs.ReadStream> {
-    const key = this.getPath(user, repo, oid);
+    const filePath = this.getPath(user, repo, oid);
     await this.getSize(user, repo, oid);
 
     return new Promise<fs.ReadStream>((resolve, reject) => {
-      const readStream = fs.createReadStream(key, 'utf8');
+      const readStream = fs.createReadStream(filePath, 'utf8');
 
       return readStream
         .on('open', () => resolve(readStream))
@@ -42,9 +42,9 @@ export class LocalFileStore implements FileStore {
   }
 
   exists(user: string, repo: string, oid: string): Promise<boolean> {
-    const key = this.getPath(user, repo, oid);
+    const filePath = this.getPath(user, repo, oid);
     return new Promise<boolean>((resolve, reject) => {
-      return fs.stat(key, (err) => {
+      return fs.stat(filePath, (err) => {
         if (!err) return resolve(true);
         if (err.code === 'ENOENT') return resolve(false);
         return reject(err);
@@ -53,12 +53,14 @@ export class LocalFileStore implements FileStore {
   }
 
   getSize(user: string, repo: string, oid: string): Promise<number> {
-    const key = this.getPath(user, repo, oid);
+    const filePath = this.getPath(user, repo, oid);
 
     return new Promise<number>((resolve, reject) => {
-      return fs.stat(key, (err, stats) => {
+      return fs.stat(filePath, (err, stats) => {
         if (!err) return resolve(Number(stats.size));
-        if (err.code === 'ENOENT') return reject(NotFoundError.create(key));
+        if (err.code === 'ENOENT') {
+          return reject(NotFoundError.create(filePath));
+        }
         return reject(err);
       });
     });
