@@ -1,6 +1,7 @@
 import { BaseLoadedConfig } from '@utils/config';
-import { Expose } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsUrl } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import ms from 'ms';
 
 export class LoadedConfig extends BaseLoadedConfig {
   @Expose()
@@ -9,11 +10,16 @@ export class LoadedConfig extends BaseLoadedConfig {
   PORT: number = 8080;
 
   @Expose()
+  @IsString()
+  @IsNotEmpty()
+  BASE_URL: string = 'http://localhost:8080';
+
+  @Expose()
   @IsNotEmpty()
   LOG_PATH: string = '/var/log/git-lfs';
 
   @Expose()
-  @IsUrl()
+  @IsString()
   @IsNotEmpty()
   STORE_DIRECTORY: string = '/srv/git-lfs';
 
@@ -23,6 +29,12 @@ export class LoadedConfig extends BaseLoadedConfig {
   HTTP_PORT: number = 8080;
 
   @Expose()
+  @IsString()
   @IsNotEmpty()
-  SSH_PORT: number = 2222;
+  JWT_SECRET: string = 'secret';
+
+  @Expose()
+  @IsNotEmpty()
+  @Type(() => String)
+  BATCH_EXPIRY: ms.StringValue = '30m';
 }

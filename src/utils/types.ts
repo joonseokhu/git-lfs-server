@@ -4,6 +4,8 @@ export type Nilable<T> = T | Nil;
 
 export type MaybePromise<T> = T | Promise<T>;
 
+export type MaybeArray<T> = T | T[];
+
 export type EmptyObject = Record<string, never>;
 
 export type KeysOfType<From, ValueType> = {

@@ -41,6 +41,17 @@ export class LocalFileStore implements FileStore {
     });
   }
 
+  exists(user: string, repo: string, oid: string): Promise<boolean> {
+    const key = this.getPath(user, repo, oid);
+    return new Promise<boolean>((resolve, reject) => {
+      return fs.stat(key, (err) => {
+        if (!err) return resolve(true);
+        if (err.code === 'ENOENT') return resolve(false);
+        return reject(err);
+      });
+    });
+  }
+
   getSize(user: string, repo: string, oid: string): Promise<number> {
     const key = this.getPath(user, repo, oid);
 

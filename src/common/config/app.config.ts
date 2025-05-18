@@ -19,6 +19,10 @@ export class AppConfig extends ConfigType(LoadedConfig) {
     return Number(this.loaded.PORT);
   }
 
+  get baseURL() {
+    return this.loaded.BASE_URL;
+  }
+
   get logPath() {
     return this.isDevelop
       ? path.join(process.cwd(), 'logs')
