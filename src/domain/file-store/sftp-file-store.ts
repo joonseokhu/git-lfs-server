@@ -3,7 +3,9 @@ import path from 'path';
 import { Readable } from 'stream';
 import { StoreConfig } from '@common';
 import { FileStore } from './file-store.abstract';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SFTPFileStore implements FileStore {
   constructor(private readonly storeConfig: StoreConfig) {}
 

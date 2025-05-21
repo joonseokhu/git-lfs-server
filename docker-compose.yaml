@@ -1,0 +1,15 @@
+services:
+  app:
+    image: git-lfs-nestjs:latest
+    restart: always
+    container_name: git-lfs
+    ports:
+      - '80:8080'
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - BASE_URL=http://localhost:8080
+    volumes:
+      - '/home/git-lfs/logs:/var/log/git-lfs'
+      - '/home/git-lfs/srv:/srv/git-lfs'
+    shm_size: '256m'

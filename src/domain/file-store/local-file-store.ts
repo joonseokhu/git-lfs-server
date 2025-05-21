@@ -3,7 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import { FileStore } from './file-store.abstract';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class LocalFileStore implements FileStore {
   constructor(private readonly storeConfig: StoreConfig) {}
 

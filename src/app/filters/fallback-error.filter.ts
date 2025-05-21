@@ -4,11 +4,11 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  NotFoundException,
+  HttpException,
 } from '@nestjs/common';
 import express from 'express';
 
-@Catch(NotFoundException)
+@Catch(HttpException)
 export class FallbackErrorFilter implements ExceptionFilter {
   constructor(
     @InjectLogger()
@@ -19,7 +19,7 @@ export class FallbackErrorFilter implements ExceptionFilter {
     const context = host.switchToHttp();
     const req = context.getRequest<express.Request>();
     const res = context.getResponse<express.Response>();
-    this.logger.info('fallback', req.method, req.url);
+    this.logger.info(`[No Endpoint] ${req.method} ${req.url}`);
 
     return NotFoundError.create(req.url).respond(res);
   }
