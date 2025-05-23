@@ -5,16 +5,19 @@ import {
   LoggerModule,
   StoreConfig,
 } from '@common';
+import express from 'express';
 import { LoadedConfig } from '@common/config/loaded.config';
 import { GitLFSModule } from '@domain/git-lfs/git-lfs.module';
-import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@utils/config';
 import {
   AnyErrorFilter,
   FallbackErrorFilter,
   HttpErrorFilter,
 } from './filters';
+import { appPipe } from './app-pipe';
+import { LoggerMiddleware } from './logger.middleware';
 
 @Module({
   imports: [
@@ -24,9 +27,19 @@ import {
     GitLFSModule,
   ],
   providers: [
+    { provide: APP_PIPE, useValue: appPipe },
     { provide: APP_FILTER, useClass: AnyErrorFilter },
     { provide: APP_FILTER, useClass: HttpErrorFilter },
     { provide: APP_FILTER, useClass: FallbackErrorFilter },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        LoggerMiddleware,
+        express.json({ type: 'application/vnd.git-lfs+json' }),
+      )
+      .forRoutes('*');
+  }
+}

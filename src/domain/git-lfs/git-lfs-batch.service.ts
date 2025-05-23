@@ -7,6 +7,7 @@ import {
   BatchOperation,
   BatchRequest,
   BatchRequestObject,
+  BatchTransfer,
 } from './dto/batch.request.dto';
 import { GitLFSJWT } from './git-lfs-jwt.schema';
 import { GitLFSService } from './git-lfs.service';
@@ -19,6 +20,8 @@ export class GitLFSBatchService {
     private readonly appConfig: AppConfig,
     @InjectJWT(GitLFSJWT) private readonly jwt: JWTService<GitLFSJWT>,
   ) {}
+
+  sign() {}
 
   getAction(
     user: string,
@@ -35,8 +38,10 @@ export class GitLFSBatchService {
       this.jwt.sign({ action: operation, user, repo, oid }),
     ].join(' ');
 
+    const key =
+      operation === BatchOperation.Verify ? BatchOperation.Verify : oid;
     return {
-      href: `${this.appConfig.baseURL}${user}/${repo}/objects/verify`,
+      href: `${this.appConfig.baseURL}/lfs/${user}/${repo}/objects/${key}`,
       expires_at: expiresAt,
       header: { Authorization: authHeader },
     };
@@ -62,6 +67,7 @@ export class GitLFSBatchService {
         return {
           oid,
           size,
+          authenticated: true,
           error: {
             code: 404,
             message: `Object ${oid} not found`,
@@ -71,6 +77,7 @@ export class GitLFSBatchService {
       return {
         oid,
         size,
+        authenticated: true,
         actions: {
           download: this.getAction(user, repo, oid, BatchOperation.Download),
         },
@@ -90,16 +97,23 @@ export class GitLFSBatchService {
     });
   }
 
-  batchObject(user: string, repo: string, batchRequest: BatchRequest) {
-    switch (batchRequest.operation) {
-      case BatchOperation.Download:
-        return this.downloadObjects(user, repo, batchRequest.objects);
-      case BatchOperation.Upload:
-        return this.uploadObjects(user, repo, batchRequest.objects);
-      case BatchOperation.Verify:
-        return this.verifyObjects(user, repo, batchRequest.objects);
-      default:
-        throw new Error('Invalid operation');
-    }
+  async batchObject(user: string, repo: string, batchRequest: BatchRequest) {
+    const objects = await (() => {
+      switch (batchRequest.operation) {
+        case BatchOperation.Download:
+          return this.downloadObjects(user, repo, batchRequest.objects);
+        case BatchOperation.Upload:
+          return this.uploadObjects(user, repo, batchRequest.objects);
+        case BatchOperation.Verify:
+          return this.verifyObjects(user, repo, batchRequest.objects);
+        default:
+          throw new Error('Invalid operation');
+      }
+    })();
+    return {
+      transfer: BatchTransfer.Basic,
+      objects,
+      hash_algo: 'sha256',
+    };
   }
 }

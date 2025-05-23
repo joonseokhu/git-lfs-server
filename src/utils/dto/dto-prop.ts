@@ -8,7 +8,7 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
-  IsEnum,
+  IsIn,
   IsNumber,
   IsObject,
   IsOptional,
@@ -60,7 +60,8 @@ export const DtoProp = (
       IsArray()(target, propertyKey);
     }
     if (isEnum) {
-      IsEnum(enumValues, { each: isArray })(target, propertyKey);
+      IsString({ each: isArray })(target, propertyKey);
+      IsIn(enumValues, { each: isArray })(target, propertyKey);
     }
     if (TargetType === Number) {
       IsNumber({ allowNaN: false }, { each: isArray })(target, propertyKey);

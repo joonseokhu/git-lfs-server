@@ -16,6 +16,8 @@ export class AnyErrorFilter implements ExceptionFilter {
 
     const cause = (exception.cause ?? exception) as Error;
 
+    console.log('http error');
+    console.log(cause);
     this.logger.error(cause);
     return new InternalServerError(cause).respond(res);
   }

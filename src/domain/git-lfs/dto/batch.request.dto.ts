@@ -21,8 +21,8 @@ export class BatchRequest {
   @DtoProp('', () => BatchOperation)
   operation: BatchOperation;
 
-  @DtoProp('', () => BatchTransfer)
-  transfers: BatchTransfer[] = [BatchTransfer.Basic];
+  @DtoProp('', () => String)
+  transfers: string[] = [];
 
   @DtoProp('', () => BatchRequestObject)
   objects: BatchRequestObject[];

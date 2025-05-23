@@ -13,8 +13,11 @@ export class HttpErrorFilter implements ExceptionFilter {
   catch(exception: HttpError, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<express.Response>();
+    const cause = exception.cause ?? exception;
 
-    this.logger.error(exception.cause);
+    console.log('http error');
+    console.log(cause);
+    this.logger.error(cause);
 
     return exception.respond(response);
   }

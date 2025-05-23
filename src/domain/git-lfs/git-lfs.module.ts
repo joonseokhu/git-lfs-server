@@ -1,4 +1,4 @@
-import { AuthConfig, LFSConfig, StoreConfig } from '@common';
+import { LFSConfig, StoreConfig } from '@common';
 import { FileStoreModule, LocalFileStore } from '@domain/file-store';
 import { Module } from '@nestjs/common';
 import { JWTModule } from '@utils/jwt';
@@ -20,7 +20,7 @@ import { SFTPFileStore } from '@domain/file-store/sftp-file-store';
       },
     }),
     JWTModule.registerAsync(GitLFSJWT, {
-      inject: [AuthConfig],
+      inject: [LFSConfig],
       useFactory: (lfsConfig: LFSConfig) => {
         return {
           secret: lfsConfig.jwtSecret,
