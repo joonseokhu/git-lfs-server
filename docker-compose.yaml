@@ -1,6 +1,6 @@
 services:
   app:
-    image: git-lfs-nestjs:latest
+    image: git-lfs-server:latest
     restart: always
     container_name: git-lfs
     ports:
