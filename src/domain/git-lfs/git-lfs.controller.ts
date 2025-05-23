@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Header,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -14,15 +15,16 @@ import { BatchRequest, VerifyRequest } from './dto';
 import { GitLFSBatchService } from './git-lfs-batch.service';
 import { GitLFSService } from './git-lfs.service';
 
-@Controller(':user/:repo')
+@Controller('lfs/:user/:repo/objects')
 export class GitLFSController {
   constructor(
     private readonly lfsService: GitLFSService,
     private readonly batchService: GitLFSBatchService,
   ) {}
 
+  @HttpCode(200)
   @Header('Content-Type', 'application/vnd.git-lfs+json')
-  @Post('objects/batch')
+  @Post('batch')
   async batchObject(
     @Param('user') user: string,
     @Param('repo') repo: string,
@@ -31,14 +33,14 @@ export class GitLFSController {
     return this.batchService.batchObject(user, repo, batchRequest);
   }
 
-  @Post('locks')
-  async createLock(
-    @Param('user') user: string,
-    @Param('repo') repo: string,
-    @Body() batchRequest: BatchRequest,
-  ) {
-    return this.batchService.batchObject(user, repo, batchRequest);
-  }
+  // @Post('locks')
+  // async createLock(
+  //   @Param('user') user: string,
+  //   @Param('repo') repo: string,
+  //   @Body() batchRequest: BatchRequest,
+  // ) {
+  //   return this.batchService.batchObject(user, repo, batchRequest);
+  // }
 
   @Post('verify')
   async verifyObject(

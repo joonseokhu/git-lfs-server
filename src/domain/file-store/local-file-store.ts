@@ -9,20 +9,20 @@ import { Injectable } from '@nestjs/common';
 export class LocalFileStore implements FileStore {
   constructor(private readonly storeConfig: StoreConfig) {}
 
-  private getPath(user: string, repo: string, oid: string): string {
-    return path.join(this.storeConfig.storeDirectory, user, repo, oid);
+  private getPath(...paths: string[]): string {
+    return path.join(this.storeConfig.storeDirectory, ...paths);
   }
 
-  put(
+  async put(
     user: string,
     repo: string,
     oid: string,
     stream: Readable,
   ): Promise<void> {
+    const filePath = this.getPath(user, repo, oid);
+    await fs.promises.mkdir(this.getPath(user, repo), { recursive: true });
     return new Promise((resolve, reject) => {
-      const filePath = this.getPath(user, repo, oid);
-      const writeStream = fs.createWriteStream(filePath, 'utf8');
-
+      const writeStream = fs.createWriteStream(filePath);
       return stream
         .pipe(writeStream)
         .on('finish', () => resolve())
@@ -35,11 +35,9 @@ export class LocalFileStore implements FileStore {
     await this.getSize(user, repo, oid);
 
     return new Promise<fs.ReadStream>((resolve, reject) => {
-      const readStream = fs.createReadStream(filePath, 'utf8');
-
-      return readStream
-        .on('open', () => resolve(readStream))
-        .on('error', (err) => reject(err));
+      const readStream = fs.createReadStream(filePath);
+      readStream.on('error', (err) => reject(err));
+      return readStream.on('open', () => resolve(readStream));
     });
   }
 
