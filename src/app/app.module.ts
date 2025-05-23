@@ -1,10 +1,4 @@
-import {
-  AppConfig,
-  AuthConfig,
-  LFSConfig,
-  LoggerModule,
-  StoreConfig,
-} from '@common';
+import { AppConfig, LFSConfig, LoggerModule, StoreConfig } from '@common';
 import express from 'express';
 import { LoadedConfig } from '@common/config/loaded.config';
 import { GitLFSModule } from '@domain/git-lfs/git-lfs.module';
@@ -22,7 +16,7 @@ import { LoggerMiddleware } from './logger.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot(LoadedConfig),
-    ConfigModule.forFeature(AppConfig, AuthConfig, StoreConfig, LFSConfig),
+    ConfigModule.forFeature(AppConfig, StoreConfig, LFSConfig),
     LoggerModule,
     GitLFSModule,
   ],
