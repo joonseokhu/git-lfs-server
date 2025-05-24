@@ -10,10 +10,10 @@
 
 ```
 git lfs install
-```
 
 git lfs track "*.zip"
 
 git config lfs.url "https://your-lfs-server.com/your-endpoint"
 
 git add .gitattributes
+```

@@ -1,7 +1,7 @@
 import { AppConfig, LFSConfig, LoggerModule, StoreConfig } from '@common';
 import express from 'express';
-import { LoadedConfig } from '@common/config/loaded.config';
-import { GitLFSModule } from '@domain/git-lfs/git-lfs.module';
+import { LoadedConfig } from '@common/config';
+import { GitLFSModule } from '@domain/git-lfs';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@utils/config';

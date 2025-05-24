@@ -22,7 +22,7 @@ export const LoggerModule = WinstonModule.forRootAsync({
             winston.format.json(),
           ),
           filename: 'automation.log.%DATE%',
-          maxSize: '1m',
+          maxSize: '500k',
           maxFiles: '14d',
         }),
       ],
